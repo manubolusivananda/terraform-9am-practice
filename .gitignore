@@ -11,3 +11,5 @@
 *.doc
 #backup
 .terraform.tfstate.backup
+#statefile in s3
+backend.tf
