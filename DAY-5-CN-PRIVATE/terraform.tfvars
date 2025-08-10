@@ -1,0 +1,7 @@
+cidr_block_vpc = "10.0.0.0/16"
+cidr_block_pub_sub = "10.0.0.0/24"
+cidr_block_pv_sub = "10.0.1.0/24"
+ami_id1 = "ami-06e11c4cc68c362dd"
+ami_id2 = "ami-06e11c4cc68c362dd"
+type1 = "t2.nano"
+type2 = "t2.micro"
