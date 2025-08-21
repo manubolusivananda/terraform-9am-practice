@@ -1,0 +1,13 @@
+cidr_block_vpc = "10.0.0.0/16"
+ami_id = "ami-00ca32bbc84273381"
+instance_type = "t2.micro"
+identifier = "database-3"
+engine = "mysql"
+engine_version = "8.0.42"
+instance_class = "db.t3.micro"
+allocated_storage = 20
+username = "admin"
+password = "siva123456"
+publicly_accessible = false
+skip_final_snapshot = true 
+backup_retention_period = 7
