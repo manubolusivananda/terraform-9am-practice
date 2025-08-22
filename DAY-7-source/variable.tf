@@ -66,7 +66,7 @@ variable "mutli_azs" {
 variable "backup_retention_period" {
     description = "value"
     type = string
-    default = "value"
+    default = ""
   
 }
 
