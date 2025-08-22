@@ -4,15 +4,21 @@ variable "cidr_block_vpc" {
     default = ""
 }
 variable "cidr_block_pub_sub" {
-    description = "pub_sub_cidr"
+    description = "pub-sub-cidr"
     type = string
     default = ""
   
 }
-variable "cidr_block_pv_sub" {
-    description = "pv_sub_cidr"
+variable "cidr_block_pvt_1" {
+    description = "pvt-sub1-cidr"
     type = string
     default = ""
+}
+variable "cidr_block_pvt_2" {
+     description = "pvt-sub2-cidr"
+     type = string
+     default = ""
+  
 }
 variable "ami_id1" {
     description = "ami_id"

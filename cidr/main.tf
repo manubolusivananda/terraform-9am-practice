@@ -1,11 +1,11 @@
 provider "aws" {
-  region = "us_east_2" # ✅ using us-east-1
+  region = "us-east-2" # ✅ using us-east-1
 }
 # 6. Security Group (multiple ports)
 resource "aws_security_group" "multi_port" {
   name        = "sgmultipleports"
   description = "Allow multiple ports"
-  vpc_id      = aws_vpc.main.id
+  
 
   ingress = [
     for port in [22, 80, 443, 8080, 9000, 3000, 8082, 8081] : {

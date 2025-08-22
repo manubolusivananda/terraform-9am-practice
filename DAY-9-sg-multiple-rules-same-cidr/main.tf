@@ -11,7 +11,7 @@ provider "aws" {
   region = "us-east-1" # ✅ using us-east-1
 }
 
-# 1. VPC
+#  VPC
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
   tags = {
@@ -19,7 +19,7 @@ resource "aws_vpc" "main" {
   }
 }
 
-# 2. Subnet
+#  Subnet
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   availability_zone       = "us-east-1a"  # ✅ must match provider region
@@ -31,7 +31,7 @@ resource "aws_subnet" "public" {
   }
 }
 
-# 3. Internet Gateway
+#  Internet Gateway
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
   tags = {
@@ -39,7 +39,7 @@ resource "aws_internet_gateway" "gw" {
   }
 }
 
-# 4. Route Table
+#  Route Table
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -53,13 +53,13 @@ resource "aws_route_table" "public" {
   }
 }
 
-# 5. Route Table Association
+#  Route Table Association
 resource "aws_route_table_association" "public_assoc" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public.id
 }
 
-# 6. Security Group (multiple ports)
+#  Security Group (multiple ports)
 resource "aws_security_group" "multi_port" {
   name        = "sgmultipleports"
   description = "Allow multiple ports"
@@ -91,7 +91,7 @@ resource "aws_security_group" "multi_port" {
   }
 }
 
-# 7. EC2 Instance
+#  EC2 Instance
 resource "aws_instance" "web" {
   ami                         = "ami-0c7217cdde317cfec" # ✅ Amazon Linux 2 in us-east-1
   instance_type               = "t2.micro"
