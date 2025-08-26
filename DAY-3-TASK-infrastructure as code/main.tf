@@ -5,10 +5,15 @@ resource "aws_vpc" "name" {
     Name = "vpc"
   }
 }
-resource "aws_subnet" "pub_sub" {
+resource "aws_subnet" "pub_sub_1" {
   vpc_id = aws_vpc.name.id
-  cidr_block = var.cidr_block_pub_sub
+  cidr_block = var.cidr_block_pub_sub_1
   availability_zone = "us-east-2a"
+}
+resource "aws_subnet" "pub_sub_2" {
+  vpc_id = aws_vpc.name.id
+  cidr_block = var.cidr_block_pub_sub_2
+  availability_zone = "us-east-2b"
 }
 resource "aws_subnet" "pvt_1" {
     vpc_id = aws_vpc.name.id
@@ -18,7 +23,7 @@ resource "aws_subnet" "pvt_1" {
 resource "aws_subnet" "pvt_2" {
     vpc_id = aws_vpc.name.id
     cidr_block = var.cidr_block_pvt_2
-    availability_zone = "us-east-2c" 
+    availability_zone = "us-east-2a" 
   
 }
 resource "aws_internet_gateway" "igw" {
@@ -30,7 +35,7 @@ resource "aws_eip" "el" {
   
 }
 resource "aws_nat_gateway" "ngw" {
-    subnet_id = aws_subnet.pub_sub.id
+    subnet_id = aws_subnet.pub_sub_1.id
     allocation_id = aws_eip.el.id
 
 }
@@ -45,23 +50,35 @@ resource "aws_route_table" "pub_rt" {
     }
 }
 resource "aws_route_table_association" "pub_ass" {
-    subnet_id = aws_subnet.pub_sub.id
-    route_table_id = aws_route_table.pub_rt.id
-
+  for_each       = {
+    pub1 = aws_subnet.pub_sub_1.id
+    pub2 = aws_subnet.pub_sub_2.id
+  }
+  subnet_id      = each.value
+  route_table_id = aws_route_table.pub_rt.id
 }
 resource "aws_route_table" "pvrt" {
-    vpc_id = aws_vpc.name.id
-    route {
-        nat_gateway_id = aws_nat_gateway.ngw.id
-        cidr_block =  "0.0.0.0/0"
+  vpc_id = aws_vpc.name.id
 
-    }
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.ngw.id
+  }
 
+  tags = {
+    Name = "private-rt"
+  }
 }
-resource "aws_route_table_association" "pvrt_ass" {
-  subnet_id = aws_subnet.pvt_1.id
+resource "aws_route_table_association" "pvt_ass" {
+  for_each = {
+    pvt1 = aws_subnet.pvt_1.id
+    pvt2 = aws_subnet.pvt_2.id
+  }
+
+  subnet_id      = each.value
   route_table_id = aws_route_table.pvrt.id
 }
+
 resource "aws_security_group" "sgr" {
   name = "sgr"
   vpc_id = aws_vpc.name.id
@@ -84,6 +101,13 @@ resource "aws_security_group" "sgr" {
   }
   ingress {
     description = "tls from vpc"
+    from_port = 3306
+    to_port = 3306
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "tls from vpc"
     from_port = 80
     to_port = 80
     protocol = "tcp"
@@ -99,16 +123,35 @@ resource "aws_security_group" "sgr" {
 resource "aws_instance" "pu_server" {
     ami = var.ami_id1
     instance_type = var.type1
-    subnet_id = aws_subnet.pub_sub.id
+    subnet_id = aws_subnet.pub_sub_1.id
     vpc_security_group_ids = [aws_security_group.sgr.id]
-    associate_public_ip_address = true                   
+    associate_public_ip_address = true
+    tags = {
+      Name = "public-server"
+   
+    }                
 }
   
-resource "aws_instance" "pv_server" {
+resource "aws_instance" "pv_server_1" {
   ami = var.ami_id2
   instance_type = var.type2
   vpc_security_group_ids = [aws_security_group.sgr.id]
   subnet_id = aws_subnet.pvt_1.id
+   tags = {
+      Name = "private-server-1"
+   
+    }  
+}
+resource "aws_instance" "pv_server_2" {
+  ami = var.ami_id3
+  instance_type = var.type3
+  vpc_security_group_ids = [aws_security_group.sgr.id]
+  subnet_id = aws_subnet.pvt_2.id  
+  tags = {
+      Name = "private-server-2"
+   
+    } 
+
 }
 resource "aws_db_subnet_group" "subnet_group" {
     name = "dev-db-subnet-group"
@@ -142,3 +185,4 @@ resource "aws_db_instance" "rds" {
 
 
 }
+
