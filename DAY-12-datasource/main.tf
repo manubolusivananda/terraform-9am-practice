@@ -1,6 +1,6 @@
-# provider "aws" {
-#   region = "us-east-2" # change if needed
-# }
+provider "aws" {
+  region = "us-east-2" # change if needed
+}
 
 # # Get the default VPC
 # data "aws_vpc" "default" {
@@ -80,4 +80,3 @@ resource "aws_instance" "name" {
     instance_type = "t2.micro"
     subnet_id = data.aws_subnet.name.id # the data source inside  subnet we calling her, so we no need to create vpc also here already create in aws.
 }  
-
