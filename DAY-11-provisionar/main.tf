@@ -34,7 +34,11 @@ resource "aws_instance" "name" {
   #   command = "echo 'Hello from local-exec!' > file400.txt"
   # }
 }
+<<<<<<< HEAD
 resource "null_resource" "name" { # only provisionar block recreate means new changes update instance is not destory
+=======
+resource "null_resource" "name" {     #only provisionar block recreate means new changes update instance is not destory
+>>>>>>> 278f5274d12cb2b9541d0be6daf54baba8991449
   provisioner "file" {
     source      = "file10"
     destination = "/home/ec2-user/file10"
@@ -62,7 +66,11 @@ resource "null_resource" "name" { # only provisionar block recreate means new ch
 }
 #Solution-2 to Re-Run the Provisioner
 #Use terraform taint to manually mark the resource for recreation:
+<<<<<<< HEAD
 # terraform taint aws_instance.server    # taint means instance delete and create  
+=======
+# terraform taint aws_instance.server # taint means instance delete and create 
+>>>>>>> 278f5274d12cb2b9541d0be6daf54baba8991449
 # terraform init
 # terraform apply
   
