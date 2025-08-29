@@ -19,7 +19,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" { #i am permission
 resource "aws_lambda_function" "my_lambda" {
   function_name = "my_lambda_function"
   role          =  aws_iam_role.lambda_role.arn 
-  handler       = "lambda_function.lambda_handler" # handler will help to move file lambda function
+  handler       = "lambda_function.lambda_handler" # handler will help to move file to lambda function
   runtime       = "python3.12"
   timeout       = 900
   memory_size   = 128
