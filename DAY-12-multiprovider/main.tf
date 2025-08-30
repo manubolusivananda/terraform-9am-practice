@@ -5,8 +5,13 @@ provider "aws" {
 
 provider "aws" {
   region = "us-west-2"
+
   alias = "dev"      #alias we can use to create differernt different region we can  create resource
   profile = "prod"   # profile we can use to create different different  aws accounts inside we can create resource.
+
+  alias = "dev"  #alias we can use to create differernt different region we can  create resource.
+  profile = "prod" # profile we can use to create different different  aws accounts inside we can create resource.
+
 }
 
 resource "aws_vpc" "name" {
